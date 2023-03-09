@@ -5,8 +5,8 @@ defined('MUK_ACCESS') or die('Access Denied');
 
 # Константы
 
-const TEMPLATES_DIR = 'templates/default';          # Путь к папке с шаблонами проекта
-const ADMIN_TEMPLATES = 'admin/views';              # Путь к папке с шаблонами административной панели
+const TEMPLATE_DIR = 'templates/default';           # Путь к папке с шаблонами проекта
+const ADMIN_TEMPLATE = 'admin/views';               # Путь к папке с шаблонами административной панели
 
 const COOKIE_VERSION = '1.0.0';                     # Версия куки-файлов (при авторизации ставится кука), если ее изменить то все выйдут из системы
 const CRYPT_KEY = '';                               # Ключ-шифрования (НЕ СОЛЬ)
@@ -29,3 +29,23 @@ const USER_CSS_JS = [
     'styles' => [],
     'scripts' => []
 ];
+
+# Импортируем пространство имен
+use core\base\exceptions\RouteException;
+
+# Автозагрузчик классов
+## чтобы можно было использовать команду use namespace\Class; и создавать новые классы
+
+function autoloadMainClasses($className)
+{
+    # заменить все \ на / (\\ чтобы PHP правильно экранировал символ \)
+    $className = str_replace('\\', '/', $className);
+
+    # Если не подключается данный файл (@ для того чтобы PHP не выстреливал предупреждения)
+    if (@!include_once $className . '.php') {
+        throw new RouteException('Неверное имя файла для подключения - ' . $className);     # выбросить исключение RouteException с текстом
+    }
+}
+
+# функция автозагрузчика классов (на вход подается функция ОБРАБОТКИ путей)
+spl_autoload_register('autoloadMainClasses');
