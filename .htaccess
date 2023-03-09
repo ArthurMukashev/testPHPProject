@@ -1,12 +1,20 @@
+# Директива (по умолчанию экранируются кавычки) например строка 'test' придет вот так \'test\'
+# Данные будут обрабатываться внутри кода поэтому экранирование кавычек ОТКЛЮЧИТЬ
 php_flag magic_quotes_gpc Off
 
+# Кодировка по умолчанию
 AddDefaultCharset utf-8
 
+# Веб сервер Apache ищет по умолчанию файлы (index.html, .htm и только потом .php)
+# Эта директива заставляет искать ТОЛЬКО index.php
 DirectoryIndex index.php
 
-RewriteEngine on
+# Перенаправление запросов инструмент Rewrite
+RewriteEngine On
 
+# Условия перенаправления
+# Если то, что запросил пользователь НЕ ЯВЛЯЕТСЯ файлом
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-favicon.ico
 
-RewriteRule ^public_html(.*) public_html/index.php
+# То ПЕРЕНАПРАВИТЬ пользователя на файл index.php
+RewriteRule ^(.*) index.php
